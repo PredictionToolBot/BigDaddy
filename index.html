@@ -932,157 +932,72 @@ iframe {
 
 <script>
 
-    window.onload = function() {
+window.onload = function() {
+    showTab('hack');
+};
 
-        showTab('hack');
-
-    };
-
-    function showTab(tab) {
-
-        document.getElementById('hack-content').style.display = tab === 'hack' ? 'block' : 'none';
-
-        document.getElementById('game-content').style.display = tab === 'game' ? 'block' : 'none';
-
-
-
-        document.getElementById('hack-tab').classList.toggle('active', tab === 'hack');
-
-        document.getElementById('game-tab').classList.toggle('active', tab === 'game');
-
-    }
-
-
+function showTab(tab) {
+    document.getElementById('hack-content').style.display = tab === 'hack' ? 'block' : 'none';
+    document.getElementById('game-content').style.display = tab === 'game' ? 'block' : 'none';
+    document.getElementById('hack-tab').classList.toggle('active', tab === 'hack');
+    document.getElementById('game-tab').classList.toggle('active', tab === 'game');
+}
 
 let storedResults = {}; // To store results for each period
 
-// Show the dialog on page load
+document.getElementById('dialog-overlay').style.display = 'flex';
 
-    document.getElementById('dialog-overlay').style.display = 'flex';
+function closeDialog(event) {
+    document.getElementById('dialog-overlay').style.display = 'none';
+}
 
-
-
-    // Close the dialog
-
-    function closeDialog(event) {
-
-        document.getElementById('dialog-overlay').style.display = 'none';
-
-    }
-
-    // Show the dialog on page load
-
-    // document.getElementById('dialog-overlay').style.display = 'flex';  // This line is removed
-
-
-
-    // Close the dialog
-
-    function closeDialog(event) {
-
-        document.getElementById('dialog-overlay').style.display = 'none';
-
-    }
-
-
-
-    // Random User Count and Period Result Simulation
-
-    setInterval(() => {
-
+setInterval(() => {
     document.getElementById('online-users').textContent = Math.floor(Math.random() * 5000) + 45000;
-
 }, 1000);
 
+function startProcess() {
+    let periodInput = document.getElementById('period-input').value.trim();
+    let resultElement = document.getElementById('result');
 
+    if (!periodInput) {
+        resultElement.textContent = "Error ❌";
+        resultElement.style.color = "#d32f2f"; // Error color
+        return;
+    }
 
-
-
-    function startProcess() {
-
-        let periodInput = document.getElementById('period-input').value.trim();
-
-        let resultElement = document.getElementById('result');
-
-
-
-        if (!periodInput) {
-
-            resultElement.textContent = "Error ❌";
-
-            resultElement.style.color = "#d32f2f"; // Error color
-
-            return;
-
-        }
-
-
-
-        document.getElementById('loading').style.display = 'block';
-
-        setTimeout(() => {
-
-            // Check if a result is already stored for this period
-
-            if (!storedResults[periodInput]) {
-
-                // Generate a random number between 0 and 9
-
-                let number = Math.floor(Math.random() * 10);
-
-
-
-                // Determine size and color based on the generated number
-
-                let size = (number >= 0 && number <= 4) ? "SMALL" : "BIG";
-
-                let color = (number % 2 === 0) ? "🔴" : "🟢";
-
-
-
-                // Store the result for this period
-
-                storedResults[periodInput] = `${size} / ${number} / ${number}`;
-
+    document.getElementById('loading').style.display = 'block';
+    
+    // If result for this period already exists, use the stored result
+    if (!storedResults[periodInput]) {
+        let randomNumbers = [];
+        while (randomNumbers.length < 4) {
+            let num = Math.floor(Math.random() * 9) + 1; // Generate number from 1 to 9
+            if (!randomNumbers.includes(num)) {
+                randomNumbers.push(num);
             }
-
-
-
-            // Display the stored result
-
-            resultElement.textContent = `${storedResults[periodInput]}`;
-
-            resultElement.style.color = "#00796b"; // Success color
-
-            document.getElementById('loading').style.display = 'none';
-
-        }, 750);
-
+        }
+        storedResults[periodInput] = randomNumbers.join(" / ");
     }
 
-    function showAccuracyDialog() {
+    resultElement.textContent = storedResults[periodInput]; // Show stored or new result
+    resultElement.style.color = "#000"; // Black color for numbers
+    
+    document.getElementById('loading').style.display = 'none';
+}
 
-        document.getElementById('accuracy-dialog').style.display = 'flex';
+function showAccuracyDialog() {
+    document.getElementById('accuracy-dialog').style.display = 'flex';
+}
 
-    }
+function hideAccuracyDialog() {
+    document.getElementById('accuracy-dialog').style.display = 'none';
+}
+
+function playSound() {
+    document.getElementById('click-sound').play();
+}
 
 
-
-    function hideAccuracyDialog() {
-
-        document.getElementById('accuracy-dialog').style.display = 'none';
-
-    }
-
-
-
-    // Play the sound when the button is clicked
-
-    function playSound() {
-
-        document.getElementById('click-sound').play();
-
-    }
 
 </script>
 
